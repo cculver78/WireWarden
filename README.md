@@ -59,8 +59,7 @@ StartupNotify=true
 ---
 
 ## License
-Released under the **MIT License**.  
-Use it, modify it, share it — just keep the notice.
+Released under the **MIT License** — free to use, modify, and share, provided the original copyright notice and credit to **Charles Culver** remain.
 
 ---
 
