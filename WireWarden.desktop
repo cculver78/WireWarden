@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=WireWarden
+Comment=Manage WireGuard tunnels with a simple PyQt GUI
+Exec=pkexec python3 /home/USER/PATH/TO/WireWarden.py
+Icon=network-vpn
+Terminal=false
+Type=Application
+Categories=Network;System;
+StartupNotify=true
