@@ -1,14 +1,8 @@
 """
 
-PyQt6 WireGuard Manager
-
-- On startup, checks all *.conf files in the folder.
-- If any contain spaces or invalid characters (not matching WireGuard's valid pattern [A-Za-z0-9_=+.-]), shows an error dialog listing them and disables controls until fixed.
-
-- Centered name labels.
-- UP/DOWN buttons; only the opposite of current state is clickable.
-- Single connection enforcement (must disconnect before bringing up another).
-- Window auto-sizes to fit all visible cards.
+# WireWarden - Simple PyQt6 GUI for WireGuard VPNs
+# Copyright (c) 2025 Charles Culver   https://github.com/cculver78  contact@chuckculver.com
+# Licensed under the MIT License. See LICENSE file for details.
 
 """
 
@@ -33,6 +27,8 @@ from PyQt6.QtWidgets import (
     QWidget,
     QFrame,
 )
+
+__version__ = "1.0.0"
 
 APP_POLL_MS = 3000
 VALID_IFACE_PATTERN = re.compile(r'^[A-Za-z0-9_=+.-]+$')
@@ -106,7 +102,13 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("WireWarden")
-        self.app_dir = Path(__file__).parent.resolve()
+        if getattr(sys, 'frozen', False):
+            # Running from a PyInstaller bundle
+            app_dir = Path(sys.executable).parent
+        else:
+            # Running in normal Python
+            app_dir = Path(__file__).parent.resolve()
+        self.app_dir = app_dir
 
         outer = QWidget()
         self.outer_layout = QVBoxLayout(outer)
