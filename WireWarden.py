@@ -1,7 +1,8 @@
 """
 
 # WireWarden - Simple PyQt6 GUI for WireGuard VPNs
-# Copyright (c) 2025 Charles Culver   https://github.com/cculver78  contact@chuckculver.com
+# Copyright (c) 2025 Charles Culver
+# [GitHub](https://github.com/cculver78) • [Bluesky](https://bsky.app/profile/dhelmet78.bsky.social) • [Threads](https://www.threads.com/@cculver78)
 # Licensed under the MIT License. See LICENSE file for details.
 
 """

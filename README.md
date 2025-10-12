@@ -63,5 +63,13 @@ Released under the **MIT License** — free to use, modify, and share, provided 
 
 ---
 
-## About
+## Concept
 WireWarden was built for sysadmins, homelab enthusiasts, and privacy-minded users who prefer a clean visual controller over the command line.
+
+---
+
+## Author
+**Charles "Chuck" Culver**  
+[GitHub](https://github.com/cculver78) • [Bluesky](https://bsky.app/profile/dhelmet78.bsky.social) • [Threads](https://www.threads.com/@cculver78)
+
+---
