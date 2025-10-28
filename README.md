@@ -72,4 +72,50 @@ WireWarden was built for sysadmins, homelab enthusiasts, and privacy-minded user
 **Charles "Chuck" Culver**  
 [GitHub](https://github.com/cculver78) • [Bluesky](https://bsky.app/profile/dhelmet78.bsky.social) • [Threads](https://www.threads.com/@cculver78)
 
----
+
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+## Known issues / fixes
+
+This was built on Fedora 42 so you shouldn't need anything extra.
+
+If you're running WireWarden on Debian 13, you may see a couple of minor
+errors.\
+They're easy to fix with the correct packages installed.
+
+**"A terminal is required to read the password"**\
+This appears when no graphical authentication agent is present.\
+Install `pkexec`, the `polkit` daemon, and a desktop-specific agent:
+
+``` bash
+sudo apt install pkexec polkitd polkit-kde-agent-1
+```
+
+If you're using GNOME, use this instead:
+
+``` bash
+sudo apt install policykit-1-gnome
+```
+
+Then log out and back in (or reboot) so the agent starts properly.\
+You'll now see a GUI password prompt when WireWarden needs elevated
+access.
+
+------------------------------------------------------------------------
+
+**"/usr/bin/wg-quick: line 32: resolvconf: command not found"**\
+This occurs if your WireGuard config includes a `DNS=` line but the
+system lacks a `resolvconf` provider.\
+Install one of these packages to fix it:
+
+``` bash
+sudo apt install resolvconf
+# or
+sudo apt install openresolv
+```
+
+After installation, bring the interface back up and DNS will configure
+correctly.
+
+------------------------------------------------------------------------
