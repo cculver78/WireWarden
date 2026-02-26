@@ -21,14 +21,9 @@ click** --- no terminal required.
 
 ## 📸 Screenshot
 
-```{=html}
-<p align="center">
-```
-`<img src="Screenshot.png" alt="WireWarden Screenshot" width="600"/>`{=html}
-`<br>`{=html} `<em>`{=html}Main interface showing active tunnel
-detection and status indicators.`</em>`{=html}
-```{=html}
-</p>
+![WireWarden Screenshot](Screenshot.png)
+
+*Main interface showing active tunnel detection and status indicators.*
 ```
 
 ------------------------------------------------------------------------
