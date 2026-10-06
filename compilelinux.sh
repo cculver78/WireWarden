@@ -1,5 +1,14 @@
 #!/bin/bash
 
+set -e
+
+APP_NAME="WireWarden"
+INSTALL_DIR="$HOME/WireWarden"
+EXEC_PATH="$INSTALL_DIR/WireWarden"
+ICON_PATH="$INSTALL_DIR/icon.png"
+DESKTOP_FILE="$HOME/Desktop/$APP_NAME.desktop"
+
+# Build WireWarden
 pyinstaller \
   --clean \
   --noconfirm \
@@ -7,45 +16,43 @@ pyinstaller \
   --windowed \
   "./WireWarden.py"
 
+# Create install directory
+mkdir -p "$INSTALL_DIR"
 
 # Remove old binary if it exists
-[ -f "$HOME/WireWarden/WireWarden" ] && rm "$HOME/WireWarden/WireWarden"
-
-# Create directory if it doesn't exist
-mkdir -p "$HOME/WireWarden"
+rm -f "$EXEC_PATH"
 
 # Copy new binary
-cp dist/WireWarden "$HOME/WireWarden/"
+cp "dist/WireWarden" "$EXEC_PATH"
 
-# Clean up build folders and files
-rm WireWarden.spec
-rm -Rf build
-rm -Rf dist
-
-
-# Set variables
-APP_NAME="WireWarden"
-EXEC_PATH="~/WireWarden/WireWarden"
-ICON_PATH="$(pwd)/icon.png"
-DESCRIPTION="WireWarden"
+# Copy icon
+cp "icon.png" "$ICON_PATH"
 
 # Create the .desktop file
-cat << EOF > ~/Desktop/$APP_NAME.desktop
+cat > "$DESKTOP_FILE" << EOF
 [Desktop Entry]
 Version=1.0
 Type=Application
 Name=$APP_NAME
 Exec=$EXEC_PATH
 Icon=$ICON_PATH
-Comment=$DESCRIPTION
+Comment=WireWarden
 Categories=Utility;
 Terminal=false
 EOF
 
-# Make the .desktop file executable
-chmod +x ~/Desktop/$APP_NAME.desktop
+# Make launcher executable
+chmod +x "$DESKTOP_FILE"
 
-# Update the desktop database
-#update-desktop-database ~/.local/share/applications
+# Mark launcher as trusted for GNOME
+gio set "$DESKTOP_FILE" metadata::trusted true
 
-echo ".desktop file created successfully at ~/Desktop/$APP_NAME.desktop"
+# Clean up PyInstaller files
+rm -f "WireWarden.spec"
+rm -rf "build"
+rm -rf "dist"
+
+echo "WireWarden installed successfully."
+echo "Executable: $EXEC_PATH"
+echo "Icon:       $ICON_PATH"
+echo "Launcher:   $DESKTOP_FILE"
