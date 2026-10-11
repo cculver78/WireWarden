@@ -1,35 +1,36 @@
-#!/bin/bash
-
-set -e
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 APP_NAME="WireWarden"
 INSTALL_DIR="$HOME/WireWarden"
 EXEC_PATH="$INSTALL_DIR/WireWarden"
 ICON_PATH="$INSTALL_DIR/icon.png"
-DESKTOP_FILE="$HOME/Desktop/$APP_NAME.desktop"
+DESKTOP_DIR="$HOME/.local/share/applications"
+DESKTOP_FILE="$DESKTOP_DIR/WireWarden.desktop"
+DESKTOP_SHORTCUT="$HOME/Desktop/WireWarden.desktop"
 
-# Build WireWarden
+# Run from the directory containing WireWarden.py and icon.png.
+if [[ ! -f WireWarden.py || ! -f icon.png ]]; then
+  echo "Run this script from the directory containing WireWarden.py and icon.png." >&2
+  exit 1
+fi
+
+# Build WireWarden.
 pyinstaller \
   --clean \
   --noconfirm \
   --onefile \
   --windowed \
+  --icon "./icon.png" \
   "./WireWarden.py"
 
-# Create install directory
-mkdir -p "$INSTALL_DIR"
+# Install the binary and icon.
+mkdir -p "$INSTALL_DIR" "$DESKTOP_DIR" "$HOME/Desktop"
+install -m 755 "dist/WireWarden" "$EXEC_PATH"
+install -m 644 "icon.png" "$ICON_PATH"
 
-# Remove old binary if it exists
-rm -f "$EXEC_PATH"
-
-# Copy new binary
-cp "dist/WireWarden" "$EXEC_PATH"
-
-# Copy icon
-cp "icon.png" "$ICON_PATH"
-
-# Create the .desktop file
-cat > "$DESKTOP_FILE" << EOF
+# Install KDE launcher in the applications directory for Wayland task-manager matching.
+cat > "$DESKTOP_FILE" <<EOF_DESKTOP
 [Desktop Entry]
 Version=1.0
 Type=Application
@@ -39,20 +40,33 @@ Icon=$ICON_PATH
 Comment=WireWarden
 Categories=Utility;
 Terminal=false
-EOF
+StartupNotify=true
+StartupWMClass=WireWarden
+EOF_DESKTOP
 
-# Make launcher executable
 chmod +x "$DESKTOP_FILE"
+cp "$DESKTOP_FILE" "$DESKTOP_SHORTCUT"
+chmod +x "$DESKTOP_SHORTCUT"
 
-# Mark launcher as trusted for GNOME
-gio set "$DESKTOP_FILE" metadata::trusted true
+# Mark the Desktop shortcut as trusted where supported.
+if command -v gio >/dev/null 2>&1; then
+  gio set "$DESKTOP_SHORTCUT" metadata::trusted true 2>/dev/null || true
+fi
 
-# Clean up PyInstaller files
+# Refresh the desktop-entry database and KDE Plasma's application cache.
+if command -v update-desktop-database >/dev/null 2>&1; then
+  update-desktop-database "$DESKTOP_DIR" || true
+fi
+if command -v kbuildsycoca6 >/dev/null 2>&1; then
+  kbuildsycoca6 --noincremental || true
+fi
+
+# Remove temporary PyInstaller files.
 rm -f "WireWarden.spec"
-rm -rf "build"
-rm -rf "dist"
+rm -rf "build" "dist"
 
 echo "WireWarden installed successfully."
 echo "Executable: $EXEC_PATH"
 echo "Icon:       $ICON_PATH"
-echo "Launcher:   $DESKTOP_FILE"
+echo "KDE launcher: $DESKTOP_FILE"
+echo "Desktop shortcut: $DESKTOP_SHORTCUT"
